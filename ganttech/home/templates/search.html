@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+{% if searched %}
+	<section class="product-filter-section">
+		<div class="container">
+			<div class="section-title">
+				<h2 style="margin-top: 25px">{{ searched }}</h2>
+			</div>
+			<div class="row">
+                {% for pro in product_search %}
+				    <div class="col-lg-3 col-sm-6">
+					<div class="product-item">
+						<div class="pi-pic">
+							<a href="{% url 'single' pro.id %}"><img src="{{ pro.image.url }}" alt="" style="height: 400px"></a>
+							<div class="pi-links">
+								<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
+								<a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+							</div>
+						</div>
+						<div class="pi-text">
+							<h6>{{ pro.price }}</h6>
+							<p>{{ pro.title|truncatechars:23 }}</p>
+						</div>
+					</div>
+				</div>
+                {% endfor %}
+
+			</div>
+			<div class="text-center pt-5">
+				<button class="site-btn sb-line sb-dark">LOAD MORE</button>
+			</div>
+		</div>
+	</section>
+{% else %}
+    <h1>Ошибка поиска</h1>
+{% endif %}
+
+{% endblock %}

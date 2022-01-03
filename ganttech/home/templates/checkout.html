@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+
+
+	<!-- Page info -->
+	<div class="page-top-info">
+		<div class="container">
+			<h4>Your cart</h4>
+			<div class="site-pagination">
+				<a href="/">Home</a> /
+				<a href="#">Your cart</a>
+			</div>
+		</div>
+	</div>
+	<!-- Page info end -->
+
+
+	<!-- checkout section  -->
+	<section class="checkout-section spad">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 order-2 order-lg-1">
+					<form class="checkout-form" method="post">
+                        {% csrf_token %}
+						<div class="cf-title">Billing Address</div>
+						<div class="row address-inputs">
+							<div class="col-md-12">
+								<input type="text" placeholder="First name:" name="first_name"  value="{{ user.first_name }}">
+								<input type="text" placeholder="Last name:" name="last_name"  value="{{ user.last_name }}">
+								<input type="text" placeholder="Address:" name="address" value="{{ profile.address }}">
+								<input type="text" placeholder="Phone:"  name="phone"  value="{{ profile.phone }}">
+                                <input type="text" placeholder="Country:" name="country"   id="id_country" value="{{ profile.country }}"">
+							</div>
+							<div class="col-md-6">
+								<p><label for="id_city">City:</label>
+                                <select name="city" class="input" id="id_city">
+                                    <option value="{{ profile.city }}" selected>{{ profile.city }}</option>
+                                    <option value="Ашхабад">Ашхабад</option>
+                                    <option value="Аннау">Аннау</option>
+                                    <option value="Балканабад">Балканабад</option>
+                                    <option value="Дашогуз">Дашогуз</option>
+                                    <option value="Мары">Мары</option>
+                                    <option value="Туркменабад">Туркменабад</option>
+                                </select></p>
+							</div>
+						</div>
+						<div class="cf-title">Payment</div>
+						<ul class="payment-list">
+							<li>Paypal<a href="#"><img src="{% static '' %}img/paypal.png" alt=""></a></li>
+							<li>Credit / Debit card<a href="#"><img src="{% static '' %}img/mastercart.png" alt=""></a></li>
+							<li>Pay when you get the package</li>
+						</ul>
+						<button class="site-btn submit-order-btn"><a>Place Order</a></button>
+					</form>
+				</div>
+				<div class="col-lg-4 order-1 order-lg-2">
+					<div class="checkout-cart">
+						<h3>Your Cart</h3>
+						<ul class="product-list">
+                          {% for sh in shopcart %}
+                                <li>
+                                    <div class="pl-thumb"><a href="{% url 'single' sh.product.id %}"><img src="{{ sh.product.image.url }}" alt=""></a></div>
+                                    <h6>{{ sh.product.title|truncatechars:15 }}</h6>
+                                    <p>${{ sh.price }}</p>
+                                    <p>Количества товара: {{ sh.quantity }}</p>
+                                </li>
+                          {% endfor %}
+						</ul>
+						<ul class="price-list">
+							<li>Total<span>{{ total }}</span></li>
+							<li>Shipping<span>free</span></li>
+							<li class="total">Total<span>{{ total }}</span></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- checkout section end -->
+
+{% endblock %}

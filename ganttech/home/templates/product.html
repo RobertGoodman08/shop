@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<!-- Page info -->
+	<div class="page-top-info">
+		<div class="container">
+			<h4>Category PAge</h4>
+			<div class="site-pagination">
+				<a href="/">Home</a> /
+				<a href="">Shop</a>
+			</div>
+		</div>
+	</div>
+	<!-- Page info end -->
+
+
+	<!-- product section -->
+	<section class="product-section">
+		<div class="container">
+			<div class="back-link">
+				<a > &lt;&lt; Back to Category</a> |
+                <a href="/category/{{ product_single.category.id }}/"><< {{ product_single.category.title }} </a>
+			</div>
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="product-pic-zoom">
+						<img class="product-big-img" src="{{ product_single.image.url }}" alt="">
+					</div>
+					<div class="product-thumbs" tabindex="1" style="overflow: hidden; outline: none;">
+						<div class="product-thumbs-track">
+                            {% for img in images %}
+                                <div class="pt active" data-imgbigurl="{{ product_single.image.url }}"><img src="{{ product_single.image.url }}" alt=""></div>
+							    <div class="pt" data-imgbigurl="{{ img.image.url }}"><img src="{{ img.image.url }}" alt=""></div>
+                            {% endfor %}
+
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 product-details">
+					<h2 class="p-title">{{ product_single.title }}</h2>
+					<h3 class="p-price">{{ product_single.price }}</h3>
+					<h4 class="p-stock">Brand: <span>{{ product_single.brand }}</span></h4>
+					<div class="p-rating">
+						<i class="fa fa-star-o"></i>
+						<i class="fa fa-star-o"></i>
+						<i class="fa fa-star-o"></i>
+						<i class="fa fa-star-o"></i>
+						<i class="fa fa-star-o fa-fade"></i>
+					</div>
+					<div class="p-review">
+						<a href="" >Количества товара: {{ product_single.amount }}</a>|<a href="">Add your review</a>
+
+					</div>
+					<div class="fw-size-choose">
+						<p>Size</p>
+						<div class="sc-item">
+							<input type="radio" name="sc" id="xs-size">
+							<label for="xs-size">32</label>
+						</div>
+
+						<div class="sc-item disable">
+							<input type="radio" name="sc" id="xl-size" disabled>
+							<label for="xl-size">40</label>
+						</div>
+					</div>
+                    <form method="post" action="{% url 'addtoshopcart' product_single.id %}">
+                        {% csrf_token %}
+                        <div class="quantity">
+                            <p>Quantity</p>
+                            <div class="pro-qty"><input type="number" value="1" name="quantity" min="1" max="{{ product_single.amount }}"></div>
+                        </div>
+                        <button type="submit"   {% if product_single.amount < 1  %} disabled {% endif %} class="site-btn">Add to Cart</button>
+                    </form>
+					<div id="accordion" class="accordion-area">
+						<div class="panel">
+							<div class="panel-header" id="headingOne">
+								<button class="panel-link active" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">information</button>
+							</div>
+							<div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+								<div class="panel-body">
+									<p>{{ product_single.detail|safe }}</p>
+								</div>
+							</div>
+						</div>
+						<div class="panel">
+							<div class="panel-header" id="headingTwo">
+								<button class="panel-link" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">care details </button>
+							</div>
+							<div id="collapse2" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+								<div class="panel-body">
+									<img src="{% static '' %}img/cards.png" alt="">
+									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pharetra tempor so dales. Phasellus sagittis auctor gravida. Integer bibendum sodales arcu id te mpus. Ut consectetur lacus leo, non scelerisque nulla euismod nec.</p>
+								</div>
+							</div>
+						</div>
+						<div class="panel">
+							<div class="panel-header" id="headingThree">
+								<button class="panel-link" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapse3">Комментарии</button>
+							</div>
+							<div id="collapse3" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+								<div class="panel-body">
+
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="comment_list">
+                                                {% for comment in comments %}
+                                                    <div class="review_item">
+                                                    <div class="media">
+                                                        <div class="d-flex">
+                                                            <img src="img/product/review-1.png" alt="">
+                                                        </div>
+                                                        <div class="media-body">
+                                                            <h4>{{ comment.username }}</h4>
+                                                            <h5>
+                                                                <div class="p-rating">
+                                                                    <i class="fa fa-star-o{% if comment.rate > 1 %}  fa-fade  fa fa-star-o{% endif %}"></i>
+                                                                    <i class="fa fa-star-o{% if comment.rate > 2 %}  fa-fade {% endif %}"></i>
+                                                                    <i class="fa fa-star-o{% if comment.rate > 3 %}  fa-fade {% endif %}"></i>
+                                                                    <i class="fa fa-star-o{% if comment.rate > 4 %}  fa-fade {% endif %}"></i>
+                                                                    <i class="fa fa-star-o{% if comment.rate > 5 %}  fa-fade {% endif %}"></i>
+                                                                </div>
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                    <p>{{ comment.comment }}</p>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="review_box">
+                                                <h4>Post a comment</h4>
+                                                <form class="row contact_form" method="post" id="contactForm" novalidate="novalidate" >
+                                                    {% csrf_token %}
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <input type="text" class="form-control" id="username" name="username" placeholder="Your Full name">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <div class="input-rating">
+                                                                <strong class="text-uppercase">Your Rating: </strong>
+                                                                <div class="stars">
+                                                                    <input type="radio" id="star5" name="rate" value="5" /><label for="star5"></label>
+                                                                    <input type="radio" id="star4" name="rate" value="4" /><label for="star4"></label>
+                                                                    <input type="radio" id="star3" name="rate" value="3" /><label for="star3"></label>
+                                                                    <input type="radio" id="star2" name="rate" value="2" /><label for="star2"></label>
+                                                                    <input type="radio" id="star1" name="rate" value="1" /><label for="star1"></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <textarea class="form-control" name="comment" id="message" rows="1" placeholder="Message"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 text-right">
+                                                        {% if user.id is not None %}
+                                                            <button type="submit" value="submit" class="btn primary-btn">Submit Now</button>
+                                                        {% else %}
+                                                            You must be logged in to post a review
+                                                        {% endif %}
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="social-sharing">
+						<a href=""><i class="fa fa-google-plus"></i></a>
+						<a href=""><i class="fa fa-pinterest"></i></a>
+						<a href=""><i class="fa fa-facebook"></i></a>
+						<a href=""><i class="fa fa-twitter"></i></a>
+						<a href=""><i class="fa fa-youtube"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- product section end -->
+
+
+	<!-- RELATED PRODUCTS section -->
+	<section class="related-product-section">
+		<div class="container">
+			<div class="section-title">
+				<h2>RELATED PRODUCTS</h2>
+			</div>
+			<div class="product-slider owl-carousel">
+                {% for prod in product_circle %}
+				    <div class="product-item">
+					<div class="pi-pic">
+						<a href="{% url 'single' prod.id %}"><img src="{{ prod.image.url }}" alt="" style="height: 350px;"></a>
+						<div class="pi-links">
+							<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
+							<a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+						</div>
+					</div>
+					<div class="pi-text">
+						<h6>$35,00</h6>
+						<p>Flamboyant Pink Top </p>
+					</div>
+				</div>
+                {% endfor %}
+			</div>
+		</div>
+	</section>
+	<!-- RELATED PRODUCTS section end -->
+
+
+{% endblock %}
